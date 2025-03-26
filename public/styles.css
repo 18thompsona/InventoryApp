@@ -1,0 +1,52 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+nav{
+    display: flex;
+    justify-content: center;
+    gap: 3em;
+    background-color: lightgray;
+    padding: 1em;
+}
+
+.navlink{
+    text-decoration: none;
+    color: blue;
+}
+
+main{
+    display: flex;
+    flex: 1;
+}
+
+.index-main{
+    display: grid;
+    padding: 2em;
+    grid-template-columns: 1fr 300px;
+    grid-template-rows: 1fr 1fr;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.item_preview{
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+}
+
+.category_preview{
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+.maker_preview{
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}
