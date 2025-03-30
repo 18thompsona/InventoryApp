@@ -53,13 +53,40 @@ async function insertMaker(newMaker) {
   await pool.query(query, [newMaker]);
 }
 
-//TODO
-//1. Delete query for single item
-//2. Delete query for category    Delete all or just change to none?
-//3. Delete query for maker       Delete all or just change to none?
+async function deleteItemByName(itemName) {
+  await pool.query("DELETE FROM items WHERE item_name = $1", [itemName]);
+}
 
-async function deleteAllUsernames() {
-  await pool.query("DELETE FROM usernames");
+async function deleteItemByID(itemId) {
+  await pool.query("DELETE FROM items WHERE id = $1", [itemId]);
+}
+
+async function deleteCategoryReassignItems(categoryName) {
+  //Gather ID number for None category
+  const { rows } = await pool.query("SELECT id FROM categories WHERE category_name = 'None'");
+  const noneID = rows[0].id;
+
+  //Update Items with category to be deleted to the None category
+  const updateQuery = `UPDATE items 
+    SET category_id = $1
+    WHERE category_id = (SELECT id FROM categories WHERE category_name = $2)
+    `;
+  await pool.query(updateQuery, [noneID, categoryName]);
+  await pool.query("DELETE FROM categories WHERE category_name = $1", [categoryName]);
+}
+
+async function deleteMakerReassignItems(makerName) {
+  //Gather ID number for None category
+  const { rows } = await pool.query("SELECT id FROM makers WHERE maker_name = 'None'");
+  const noneID = rows[0].id;
+
+  //Update Items with category to be deleted to the None category
+  const updateQuery = `UPDATE items 
+    SET maker_id = $1
+    WHERE maker_id = (SELECT id FROM makers WHERE maker_name = $2)
+    `;
+  await pool.query(updateQuery, [noneID, makerName]);
+  await pool.query("DELETE FROM makers WHERE maker_name = $1", [makerName]);
 }
 
 module.exports = {
@@ -70,4 +97,8 @@ module.exports = {
   insertItem,
   insertCategory,
   insertMaker,
+  deleteItemByName,
+  deleteItemByName,
+  deleteCategoryReassignItems,
+  deleteMakerReassignItems
 };

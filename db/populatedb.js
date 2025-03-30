@@ -14,7 +14,7 @@ VALUES
   ('Weapons'),
   ('Armor'),
   ('Items')
-ON CONFLICT (username) DO NOTHING;
+ON CONFLICT (category_name) DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS makers (
   id SERIAL PRIMARY KEY,
@@ -27,15 +27,15 @@ VALUES
   ('Kingdom'),
   ('Empire'),
   ('Plains')
-ON CONFLICT (username) DO NOTHING;
+ON CONFLICT (maker_name) DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS items (
   id SERIAL PRIMARY KEY,
-  item_name VARCHAR (255) UNIQUE,
-  price NUMERIC(2),
-  quantity INTERGER CHECK (quantity >= 0)
-  category_id REFERENCES categories(category_id),
-  maker_id REFERENCES makers(maker_id),
+  item_name VARCHAR(255) UNIQUE,
+  price NUMERIC(10, 2),
+  quantity INTEGER CHECK (quantity >= 0),
+  category_id INTEGER REFERENCES categories(id),
+  maker_id INTEGER REFERENCES makers(id)
 );
 
 INSERT INTO items (item_name, price, quantity, category_id, maker_id) 
@@ -61,7 +61,7 @@ VALUES
     (SELECT id FROM categories WHERE category_name = 'Items'),
     (SELECT id FROM makers WHERE maker_name = 'Plains')
   )
-ON CONFLICT (username) DO NOTHING;
+ON CONFLICT (item_name) DO NOTHING;
 `;
 
 async function main() {
